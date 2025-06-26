@@ -1,0 +1,54 @@
+name: Monorepo Build
+
+on:
+  pull_request:
+
+jobs:
+  build-fe1:
+    if: contains(github.event.pull_request.changed_files, 'apps/fe1/')
+    runs-on: ubuntu-latest
+    env:
+      WORKING_DIRECTORY: apps/fe1
+    steps:
+      - name: Checkout frontend directory
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: ${{ env.WORKING_DIRECTORY }}
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm ci
+
+      - name: Build frontend app
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm run build
+
+  build-fe2:
+    if: contains(github.event.pull_request.changed_files, 'apps/fe2/')
+    runs-on: ubuntu-latest
+    env:
+      WORKING_DIRECTORY: apps/fe2
+    steps:
+      - name: Checkout frontend directory
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: ${{ env.WORKING_DIRECTORY }}
+          sparse-checkout-cone-mode: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm ci
+
+      - name: Build frontend app
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm run build

@@ -1,15 +1,15 @@
-name: Build frontend1 container
+name: Build frontend2 container
 
 on:
   push:
     paths:
-    - "apps/fe1/**"
+    - "apps/fe2/**"
 
 env:
-  WORKING_DIRECTORY: apps/fe1
+  WORKING_DIRECTORY: apps/fe2
 
 jobs:
-  build-frontend-container:
+  build-frontend2-container:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout frontend directory

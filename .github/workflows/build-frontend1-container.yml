@@ -6,7 +6,7 @@ on:
     - "apps/fe2/**"
 
 env:
-  WORKING_DIRECTORY: ./apps/fe2
+  WORKING_DIRECTORY: apps/fe2
 
 jobs:
   build-frontend-container:

@@ -1,12 +1,12 @@
-name: Build frontend1 container
+name: Build frontend2 container
 
 on:
   push:
     paths:
-    - "apps/fe1/**"
+    - "apps/fe2/**"
 
 env:
-  WORKING_DIRECTORY: ./apps/fe1
+  WORKING_DIRECTORY: ./apps/fe2
 
 jobs:
   build-frontend-container:
@@ -17,9 +17,6 @@ jobs:
         with:
           sparse-checkout: ${{ env.WORKING_DIRECTORY }}
           sparse-checkout-cone-mode: false
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v4

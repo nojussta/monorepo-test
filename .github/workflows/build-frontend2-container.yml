@@ -10,7 +10,7 @@ env:
 
 jobs:
   build-frontend-container:
-    runs-on: ubuntu-latest-large
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout frontend directory
         uses: actions/checkout@v4

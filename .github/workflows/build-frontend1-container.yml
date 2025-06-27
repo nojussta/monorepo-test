@@ -1,32 +1,32 @@
-name: Build frontend1 container
+# name: Build frontend1 container
 
-on:
-  push:
-    paths:
-    - "apps/fe1/**"
+# on:
+#   push:
+#     paths:
+#     - "apps/fe1/**"
 
-env:
-  WORKING_DIRECTORY: apps/fe1
+# env:
+#   WORKING_DIRECTORY: apps/fe1
 
-jobs:
-  build-frontend1-container:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout frontend directory
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: ${{ env.WORKING_DIRECTORY }}
-          sparse-checkout-cone-mode: false
+# jobs:
+#   build-frontend1-container:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout frontend directory
+#         uses: actions/checkout@v4
+#         with:
+#           sparse-checkout: ${{ env.WORKING_DIRECTORY }}
+#           sparse-checkout-cone-mode: false
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: "22"
 
-      - name: Install dependencies
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: npm ci
+#       - name: Install dependencies
+#         working-directory: ${{ env.WORKING_DIRECTORY }}
+#         run: npm ci
 
-      - name: Build frontend app
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: npm run build
+#       - name: Build frontend app
+#         working-directory: ${{ env.WORKING_DIRECTORY }}
+#         run: npm run build

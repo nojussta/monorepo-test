@@ -1,12 +1,7 @@
 name: Build
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
-    branches:
-      - main
 
 env:
   FE1_PATHS: |
@@ -28,15 +23,22 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Output Github context
+        env:
+          CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "Github context: $CONTEXT"
+
       - name: Filter which workflows to run
         id: filter
+        env:
+          PREVIOUS_COMMIT: ${{ github.event.before }}
         run: |
           echo "Checking for changes in frontend apps..."
-          
-          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
-            BASE_REF="origin/${GITHUB_BASE_REF}"
+
+          if [[ "$GITHUB_REF_NAME" != "main" ]]; then
+            BASE_REF="$PREVIOUS_COMMIT"
             HEAD_REF="$GITHUB_SHA"
-            git fetch origin $GITHUB_BASE_REF --depth=1
             git diff --name-only $BASE_REF $HEAD_REF > changed_files.txt
           else
             git diff --name-only origin/main~1 origin/main > changed_files.txt

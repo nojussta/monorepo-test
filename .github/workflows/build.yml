@@ -31,8 +31,17 @@ jobs:
         run: |
           echo "Checking for changes in frontend apps..."
 
-          git fetch origin main --depth=1
-          git diff --name-only origin/main...HEAD > changed_files.txt
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            BASE_REF="origin/${GITHUB_BASE_REF}"
+            HEAD_REF="$GITHUB_SHA"
+            git fetch origin $GITHUB_BASE_REF --depth=1
+          else
+            BASE_REF="origin/main"
+            HEAD_REF="$GITHUB_SHA"
+            git fetch origin main --depth=1
+          fi
+
+          git diff --name-only $BASE_REF $HEAD_REF > changed_files.txt
 
           for var in FE1_PATHS FE2_PATHS; do
             changed=false

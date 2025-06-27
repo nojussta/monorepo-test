@@ -37,7 +37,7 @@ jobs:
           if [[ "$GITHUB_REF_NAME" != "main" ]]; then
             BASE_REF="origin/${GITHUB_REF_NAME}"
             HEAD_REF="$GITHUB_SHA"
-            git fetch origin $GITHUB_REF_NAME --depth=1
+            git fetch origin $BASE_REF --depth=1
             git diff --name-only $BASE_REF $HEAD_REF > changed_files.txt
           else
             git diff --name-only origin/main~1 origin/main > changed_files.txt

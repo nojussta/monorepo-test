@@ -36,7 +36,7 @@ jobs:
 
           printenv
           
-          if [[ "$GITHUB_REF" != "main" ]]; then
+          if [[ "$GITHUB_REF_NAME" != "main" ]]; then
             BASE_REF="origin/${GITHUB_BASE_REF}"
             HEAD_REF="$GITHUB_SHA"
             git fetch origin $GITHUB_BASE_REF --depth=1

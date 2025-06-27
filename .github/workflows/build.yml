@@ -36,10 +36,8 @@ jobs:
         run: |
           echo "Checking for changes in frontend apps..."
 
-          printenv
-          
           if [[ "$GITHUB_REF_NAME" != "main" ]]; then
-            BASE_REF="origin/${PREVIOUS_COMMIT}"
+            BASE_REF="${PREVIOUS_COMMIT}"
             HEAD_REF="$GITHUB_SHA"
             git diff --name-only $BASE_REF $HEAD_REF > changed_files.txt
           else

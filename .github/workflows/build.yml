@@ -33,6 +33,8 @@ jobs:
         id: filter
         run: |
           echo "Checking for changes in frontend apps..."
+
+          printenv
           
           if [[ "$GITHUB_REF" != "main" ]]; then
             BASE_REF="origin/${GITHUB_BASE_REF}"

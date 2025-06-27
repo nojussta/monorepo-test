@@ -31,15 +31,16 @@ jobs:
 
       - name: Filter which workflows to run
         id: filter
+        env:
+          PREVIOUS_COMMIT: ${{ github.event.before }}
         run: |
           echo "Checking for changes in frontend apps..."
 
           printenv
           
           if [[ "$GITHUB_REF_NAME" != "main" ]]; then
-            BASE_REF="origin/${GITHUB_BASE_REF}"
+            BASE_REF="origin/${PREVIOUS_COMMIT}"
             HEAD_REF="$GITHUB_SHA"
-            git fetch origin $GITHUB_BASE_REF --depth=1
             git diff --name-only $BASE_REF $HEAD_REF > changed_files.txt
           else
             git diff --name-only origin/main~1 origin/main > changed_files.txt

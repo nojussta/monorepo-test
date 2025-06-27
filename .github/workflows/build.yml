@@ -23,6 +23,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Output Github context
+        env:
+          CONTEXT: ${{ toJson(github) }}
+        run: echo "Github context: $CONTEXT"
+
       - name: Filter which workflows to run
         id: filter
         run: |

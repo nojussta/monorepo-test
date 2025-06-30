@@ -52,7 +52,7 @@ jobs:
           PREVIOUS_COMMIT: ${{ github.event.before }}
         shell: pwsh
         run: |
-          Write-Host "Checking for changes in frontend apps..."
+          Write-Host "Checking for changes in frontend apps...`n"
 
           if ($env:GITHUB_REF_NAME -ne "main") {
               $baseRef = $env:PREVIOUS_COMMIT
@@ -72,7 +72,7 @@ jobs:
               foreach ($path in $paths) {
                   foreach ($file in $changedFiles) {
                       if ($file.StartsWith($path)) {
-                          Write-Host "Change detected!"
+                          Write-Host "Change detected!`n"
                           $changed = $true
                           break
                       }

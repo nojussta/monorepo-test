@@ -71,6 +71,10 @@ jobs:
           $changedFiles | ForEach-Object { Write-Host $_ }
 
           $apps = @('FE1_PATHS', 'FE2_PATHS')
+
+          Write-Host "FE1_PATHS: $env:FE1_PATHS"
+          Write-Host "FE2_PATHS: $env:FE2_PATHS"
+          
           foreach ($app in $apps) {
               $changed = $false
               $paths = (${env:$app} -split ",") | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }

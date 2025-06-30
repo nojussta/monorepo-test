@@ -25,12 +25,14 @@ jobs:
 
       - name: Filter which workflows to run
         id: filter
+        env:
+          PREVIOUS_COMMIT: ${{ github.event.before }}
         shell: pwsh
         run: |
           Write-Host "Checking for changes in frontend apps..."
 
           if ($env:GITHUB_REF_NAME -ne "main") {
-              $baseRef = $env:GITHUB_EVENT_BEFORE
+              $baseRef = $env:PREVIOUS_COMMIT
               $headRef = $env:GITHUB_SHA
           }
           else {

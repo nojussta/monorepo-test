@@ -72,7 +72,7 @@ jobs:
               foreach ($path in $paths) {
                   foreach ($file in $changedFiles) {
                       if ($file.StartsWith($path)) {
-                          Write-Host "Change detected!`n"
+                          Write-Host "Change detected!"
                           $changed = $true
                           break
                       }
@@ -80,7 +80,7 @@ jobs:
                   if ($changed) { break }
               }
               $key = $app.ToLower() -replace "_paths", ""
-              Write-Host "$key`_changed=$changed"
+              Write-Host "$key`_changed=$changed`n"
               Add-Content -Path $env:GITHUB_OUTPUT -Value ($key + "_changed=$changed")
           }
 

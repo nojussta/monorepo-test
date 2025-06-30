@@ -77,7 +77,7 @@ jobs:
 
           foreach ($app in $apps) {
               $changed = $false
-              $paths = ($env:Get_Item($app) -split ",") | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }
+              $paths = ([System.Environment]::GetEnvironmentVariable($app) -split ",") | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }
               Write-Host "Checking app: $app"
               Write-Host "Paths: $($paths -join ', ')"
               foreach ($path in $paths) {

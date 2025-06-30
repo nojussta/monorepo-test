@@ -63,17 +63,20 @@ jobs:
               $headRef = "origin/main"
           }
 
-          $changedFiles = git diff --name-only $baseRef $headRef
+          $changedFiles = git diff --name-only $baseRef $headRef | Where-Object { $_ -ne "" }
 
           $apps = @('FE1_PATHS', 'FE2_PATHS')
           foreach ($app in $apps) {
               $changed = $false
               $paths = (${env:$app} -split ",") | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }
               foreach ($path in $paths) {
-                  if ($changedFiles -match "^$path") {
-                      $changed = $true
-                      break
+                  foreach ($file in $changedFiles) {
+                      if ($file.StartsWith($path)) {
+                          $changed = $true
+                          break
+                      }
                   }
+                  if ($changed) { break }
               }
               $key = $app.ToLower() -replace "_paths", ""
               Add-Content -Path $env:GITHUB_OUTPUT -Value ($key + "_changed=$changed")

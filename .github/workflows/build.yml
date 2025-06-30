@@ -27,35 +27,62 @@ jobs:
         id: filter
         env:
           PREVIOUS_COMMIT: ${{ github.event.before }}
-        shell: pwsh
         run: |
-          Write-Host "Checking for changes in frontend apps..."
+          echo "Checking for changes in frontend apps..."
 
-          if ($env:GITHUB_REF_NAME -ne "main") {
-              $baseRef = $env:PREVIOUS_COMMIT
-              $headRef = $env:GITHUB_SHA
-          }
-          else {
-              $baseRef = "origin/main~1"
-              $headRef = "origin/main"
-          }
+          if [[ "$GITHUB_REF_NAME" != "main" ]]; then
+            BASE_REF="$PREVIOUS_COMMIT"
+            HEAD_REF="$GITHUB_SHA"
+            git diff --name-only $BASE_REF $HEAD_REF > changed_files.txt
+          else
+            git diff --name-only origin/main~1 origin/main > changed_files.txt
+          fi
 
-          $changedFiles = git diff --name-only $baseRef $headRef
-                              
-          $apps = @("FE1_PATHS", "FE2_PATHS")
-          foreach ($app in $apps) {
-              $changed = $false
-              $paths = ${env:$app} -split "`n" | Where-Object { $_ -ne "" }
-              foreach ($path in $paths) {
-                  if ($changedFiles -match "^$path") {
-                      $changed = $true
-                      break
-                  }
-              }
-              $key = $app.ToLower() -replace "_paths", ""
-              Add-Content -Path $env:GITHUB_OUTPUT -Value "$key`_changed=$changed"
-          }
+          for var in FE1_PATHS FE2_PATHS; do
+            changed=false
+            while read -r path; do
+              [[ -z "$path" ]] && continue
+              grep -q "^$path" changed_files.txt && changed=true && break
+            done <<< "${!var}"
+            key=$(echo "$var" | tr '[:upper:]' '[:lower:]' | sed 's/_paths//')
+            echo "$key"_changed=$changed >> $GITHUB_OUTPUT
+          done
+
           printenv
+
+      # - name: Filter which workflows to run
+      #   id: filter
+      #   env:
+      #     PREVIOUS_COMMIT: ${{ github.event.before }}
+      #   shell: pwsh
+      #   run: |
+      #     Write-Host "Checking for changes in frontend apps..."
+
+      #     if ($env:GITHUB_REF_NAME -ne "main") {
+      #         $baseRef = $env:PREVIOUS_COMMIT
+      #         $headRef = $env:GITHUB_SHA
+      #     }
+      #     else {
+      #         $baseRef = "origin/main~1"
+      #         $headRef = "origin/main"
+      #     }
+
+      #     $changedFiles = git diff --name-only $baseRef $headRef
+                              
+      #     $apps = @("FE1_PATHS", "FE2_PATHS")
+      #     foreach ($app in $apps) {
+      #         $changed = $false
+      #         $paths = ${env:$app} -split "`n" | Where-Object { $_ -ne "" }
+      #         foreach ($path in $paths) {
+      #             if ($changedFiles -match "^$path") {
+      #                 $changed = $true
+      #                 break
+      #             }
+      #         }
+      #         $key = $app.ToLower() -replace "_paths", ""
+      #         Add-Content -Path $env:GITHUB_OUTPUT -Value "$key`_changed=$changed"
+      #     }
+      #     printenv
 
   build-fe1:
     needs: detect-changes

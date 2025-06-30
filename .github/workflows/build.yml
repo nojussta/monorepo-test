@@ -63,29 +63,16 @@ jobs:
               $headRef = "origin/main"
           }
 
-          Write-Host "Base ref: $baseRef"
-          Write-Host "Head ref: $headRef"
-
           $changedFiles = git diff --name-only $baseRef $headRef | Where-Object { $_ -ne "" }
-          Write-Host "Changed files:"
-          $changedFiles | ForEach-Object { Write-Host $_ }
 
           $apps = @('FE1_PATHS', 'FE2_PATHS')
-
-          Write-Host "FE1_PATHS: $env:FE1_PATHS"
-          Write-Host "FE2_PATHS: $env:FE2_PATHS"
-
           foreach ($app in $apps) {
               $changed = $false
               $paths = ([System.Environment]::GetEnvironmentVariable($app) -split ",") | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }
-              Write-Host "Checking app: $app"
-              Write-Host "Paths: $($paths -join ', ')"
               foreach ($path in $paths) {
-                  Write-Host "  Checking path: $path"
                   foreach ($file in $changedFiles) {
-                      Write-Host "    Against file: $file"
                       if ($file.StartsWith($path)) {
-                          Write-Host "    Match found!"
+                          Write-Host "Change detected!"
                           $changed = $true
                           break
                       }
@@ -96,8 +83,6 @@ jobs:
               Write-Host "$key`_changed=$changed"
               Add-Content -Path $env:GITHUB_OUTPUT -Value ($key + "_changed=$changed")
           }
-          Write-Host "Changed files content"
-          Get-Content $env:GITHUB_OUTPUT
 
   build-fe1:
     needs: detect-changes

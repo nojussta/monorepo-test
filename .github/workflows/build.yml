@@ -68,8 +68,8 @@ jobs:
           }
 
           $changedFiles = git diff --name-only $baseRef $headRef
-                              
-          $apps = @("FE1_PATHS", "FE2_PATHS")
+
+          $apps = @("$env:FE1_PATHS", "$env:FE2_PATHS")
           foreach ($app in $apps) {
               $changed = $false
               $paths = ${env:$app} -split "`n" | Where-Object { $_ -ne "" }

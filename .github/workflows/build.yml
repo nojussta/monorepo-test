@@ -4,12 +4,8 @@ on:
   push:
 
 env:
-  FE1_PATHS: |
-    apps/fe1
-    tools
-  FE2_PATHS: |
-    apps/fe2
-    tools
+  FE1_PATHS: "apps/fe1, tools"
+  FE2_PATHS: "apps/fe2, tools"
 
 jobs:
   detect-changes:
@@ -69,10 +65,10 @@ jobs:
 
           $changedFiles = git diff --name-only $baseRef $headRef
 
-          $apps = @("$env:FE1_PATHS", "$env:FE2_PATHS")
+          $apps = @('FE1_PATHS', 'FE2_PATHS')
           foreach ($app in $apps) {
               $changed = $false
-              $paths = ${env:$app} -split "`n" | Where-Object { $_ -ne "" }
+              $paths = (${env:$app} -split ",") | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }
               foreach ($path in $paths) {
                   if ($changedFiles -match "^$path") {
                       $changed = $true
@@ -80,11 +76,10 @@ jobs:
                   }
               }
               $key = $app.ToLower() -replace "_paths", ""
-              Add-Content -Path $env:GITHUB_OUTPUT -Value "$key`_changed=$changed"
+              Add-Content -Path $env:GITHUB_OUTPUT -Value ($key + "_changed=$changed")
           }
-          printenv
           Write-Host "Changed files content"
-          cat $env:GITHUB_OUTPUT
+          Get-Content $env:GITHUB_OUTPUT
 
   build-fe1:
     needs: detect-changes

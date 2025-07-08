@@ -25,16 +25,25 @@ jobs:
           PREVIOUS_COMMIT: ${{ github.event.before }}
         shell: pwsh
         run: |
-          Write-Host "Checking for changes in frontend apps...`n"
+          Write-Host "Checking for changes in apps...`n"
+
+          $NULL_SHA = '0000000000000000000000000000000000000000'
 
           if ($env:GITHUB_REF_NAME -ne "main") {
-              $baseRef = $env:PREVIOUS_COMMIT
+              if ([string]::IsNullOrEmpty($env:PREVIOUS_COMMIT) -or $env:PREVIOUS_COMMIT -eq $NULL_SHA) {
+                  $baseRef = "origin/main"
+              } else {
+                  $baseRef = $env:PREVIOUS_COMMIT
+              }
               $headRef = $env:GITHUB_SHA
           }
           else {
               $baseRef = "origin/main~1"
               $headRef = "origin/main"
           }
+
+          Write-Host "Base ref: $baseRef"
+          Write-Host "Head ref: $headRef`n"
 
           $changedFiles = git diff --name-only $baseRef $headRef | Where-Object { $_ -ne "" }
 

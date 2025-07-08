@@ -70,9 +70,9 @@ jobs:
   build-fe1:
     needs: detect-changes
     if: needs.detect-changes.outputs.fe1_changed == 'true'
-    uses: nojussta/monorepo-test/apps/fe1/.github/workflows/build-frontend.yml
+    uses: nojussta/monorepo-test/apps/fe1/.github/workflows/build-frontend.yml@${{ github.sha }}
 
   build-fe2:
     needs: detect-changes
     if: needs.detect-changes.outputs.fe2_changed == 'true'
-    uses: nojussta/monorepo-test/apps/fe2/.github/workflows/build-frontend.yml
+    uses: nojussta/monorepo-test/apps/fe2/.github/workflows/build-frontend.yml@${{ github.sha }}

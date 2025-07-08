@@ -1,6 +1,7 @@
 name: Build
 
 on:
+  workflow_dispatch:
   push:
 
 env:
@@ -70,49 +71,24 @@ jobs:
   build-fe1:
     needs: detect-changes
     if: needs.detect-changes.outputs.fe1_changed == 'true'
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-    env:
-      WORKING_DIRECTORY: apps/fe1
-    steps:
-      - name: Checkout frontend directory
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: ${{ env.WORKING_DIRECTORY }}
-          sparse-checkout-cone-mode: false
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - name: Install dependencies
-        run: npm ci
-      - name: Build frontend app
-        run: npm run build
+    # runs-on: ubuntu-latest
+    # uses: nojussta/monorepo-test/apps/fe1/.github/workflows/build-frontend.yml@${{ github.sha }}
+    uses: ./apps/fe1/.github/workflows/build-frontend.yml
+    # steps:
+    #   - name: Dispatch workflow
+    #     uses: actions/github-script@v7
+    #     with:
+    #       github-token: ${{ github.token }}
+    #       script: |
+    #         await github.rest.actions.createWorkflowDispatch({
+    #           owner: 'nojussta',
+    #           repo: 'monorepo-test',
+    #           workflow_id: 'apps/fe1/.github/workflows/build-frontend.yml',
+    #           ref: '${{ github.ref_name }}'
+    #         })
 
   build-fe2:
     needs: detect-changes
     if: needs.detect-changes.outputs.fe2_changed == 'true'
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-    env:
-      WORKING_DIRECTORY: apps/fe2
-    steps:
-      - name: Checkout frontend directory
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: ${{ env.WORKING_DIRECTORY }}
-          sparse-checkout-cone-mode: false
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - name: Install dependencies
-        run: npm ci
-      - name: Build frontend app
-        run: npm run build
+    # uses: nojussta/monorepo-test/apps/fe2/.github/workflows/build-frontend.yml@${{ github.sha }}
+    uses: ./apps/fe2/.github/workflows/build-frontend.yml

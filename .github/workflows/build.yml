@@ -70,49 +70,9 @@ jobs:
   build-fe1:
     needs: detect-changes
     if: needs.detect-changes.outputs.fe1_changed == 'true'
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-    env:
-      WORKING_DIRECTORY: apps/fe1
-    steps:
-      - name: Checkout frontend directory
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: ${{ env.WORKING_DIRECTORY }}
-          sparse-checkout-cone-mode: false
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - name: Install dependencies
-        run: npm ci
-      - name: Build frontend app
-        run: npm run build
+    uses: nojussta/monorepo-test/apps/fe1/.github/workflows/build-frontend.yml
 
   build-fe2:
     needs: detect-changes
     if: needs.detect-changes.outputs.fe2_changed == 'true'
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-    env:
-      WORKING_DIRECTORY: apps/fe2
-    steps:
-      - name: Checkout frontend directory
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: ${{ env.WORKING_DIRECTORY }}
-          sparse-checkout-cone-mode: false
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - name: Install dependencies
-        run: npm ci
-      - name: Build frontend app
-        run: npm run build
+    uses: nojussta/monorepo-test/apps/fe2/.github/workflows/build-frontend.yml

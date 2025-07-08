@@ -56,7 +56,7 @@ jobs:
               foreach ($path in $paths) {
                   foreach ($file in $changedFiles) {
                       if ($file.StartsWith($path)) {
-                          Write-Host "$($appName) change detected!"
+                          Write-Host "Changes detected: $($file)"
                           $changed = $true
                           break
                       }
